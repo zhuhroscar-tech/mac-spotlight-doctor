@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mac-spotlight-doctor"
+version = "0.1.0"
+description = "A tiny macOS helper to inspect Spotlight blockers on mounted volumes."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.8"
+authors = [{name = "zhuhroscar-tech", email = "noreply@example.com"}]
+dependencies = []
+classifiers = [
+    "Environment :: MacOS X",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Operating System :: MacOS :: MacOS X",
+]
+
+[project.urls]
+Homepage = "https://github.com/zhuhroscar-tech/mac-spotlight-doctor"
+
+[project.scripts]
+mac-spotlight-doctor = "mac_unmount_doctor.cli:main"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.setuptools]
+package-dir = {"" = "src"}

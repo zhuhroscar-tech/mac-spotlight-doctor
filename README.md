@@ -1,0 +1,86 @@
+# mac-spotlight-doctor
+
+A tiny macOS CLI utility that helps users investigate **why an external volume
+isn't safe to eject because Spotlight or other processes keep handles open**.
+
+It is intentionally conservative: first shows who is holding the volume and
+whether Spotlight indexing is active for that path, then optionally lets you
+toggle Spotlight indexing off/on for the target.
+
+## Why this exists
+
+Demand appears repeatedly across English, Chinese, and Japanese communities:
+
+- People report drives staying "in use" when macOS blocks ejection and often see
+  `_mds_stores`/Spotlight activity.
+- Chinese community traffic around `Dec 13, 2025` explicitly mentions adding the
+  external drive to Spotlight exclusion as a workaround.
+- Japanese resources document adding external media to Spotlight privacy/exclusion
+  when ejection and indexing behavior is problematic.
+
+Built-in tooling already exists (`diskutil`, `lsof`, `mdutil`), but command output is
+noisy and fragmented. This tool turns it into a small, consistent diagnostic flow.
+
+## Features
+
+- Detect open file handles for a path/volume with `lsof`.
+- Read disk metadata via `diskutil` when available.
+- Detect Spotlight indexing state for the target with `mdutil -s`.
+- JSON output (`--json`) for scripts.
+- Toggle Spotlight indexing at that mount path only (`--spotlight on|off`).
+- Optional status-only query (`--spotlight status`).
+
+## Install (developer)
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e .
+mac-spotlight-doctor --help
+```
+
+## Install from release artifact
+
+```bash
+curl -LO https://github.com/zhuhroscar-tech/mac-spotlight-doctor/releases/download/v0.1.0/mac_spotlight_doctor-0.1.0-py3-none-any.whl
+curl -LO https://github.com/zhuhroscar-tech/mac-spotlight-doctor/releases/download/v0.1.0/SHA256SUMS.txt
+shasum -a 256 -c SHA256SUMS.txt
+python3 -m pip install --user --force-reinstall mac_spotlight_doctor-0.1.0-py3-none-any.whl
+```
+
+## Usage
+
+```bash
+# Read-only diagnosis
+mac-spotlight-doctor /Volumes/YourDrive
+
+# JSON for scripts
+mac-spotlight-doctor --json /Volumes/YourDrive
+
+# Turn indexing off temporarily (no force kill), then re-check
+mac-spotlight-doctor --spotlight off /Volumes/YourDrive
+mac-spotlight-doctor --spotlight status /Volumes/YourDrive
+```
+
+## Safety / privacy
+
+- No telemetry.
+- No network calls.
+- No automatic process termination.
+- Commands are local and OS-level only.
+
+## Limits
+
+- Requires `lsof`, `diskutil`, and `mdutil` (macOS standard tools).
+- It can suggest likely causes, but does not replace Disk Arbitration or full storage maintenance tooling.
+- Not signed/notarized; this is a source/packaged Python artifact.
+
+## Uninstall
+
+```bash
+pip uninstall mac-spotlight-doctor
+```
+
+## License
+
+MIT.
