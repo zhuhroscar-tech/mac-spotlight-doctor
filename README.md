@@ -1,7 +1,25 @@
 # mac-spotlight-doctor
 
+[![Release](https://img.shields.io/github/v/release/zhuhroscar-tech/mac-spotlight-doctor?include_prereleases&label=release)](https://github.com/zhuhroscar-tech/mac-spotlight-doctor/releases/tag/v0.1.0)
+
 A tiny macOS CLI utility that helps users investigate **why an external volume
 isn't safe to eject because Spotlight or other processes keep handles open**.
+
+## Simple explanation
+
+If an external drive won't eject and macOS mentions Spotlight or `mds_stores`,
+this tool checks whether Spotlight is actively indexing that drive and shows
+you what's holding it open, in plain language. It can also turn Spotlight
+indexing off for just that drive if you want to eject it faster — it never
+force-quits a process or touches indexing anywhere else.
+
+```text
+$ mac-spotlight-doctor /Volumes/YourDrive
+Spotlight indexing: active on /Volumes/YourDrive
+Open handles: mds_stores (pid 61), mdworker_shared (pid 4021)
+Suggestion: run with --spotlight off to pause indexing on this volume, then
+retry eject.
+```
 
 It is intentionally conservative: first shows who is holding the volume and
 whether Spotlight indexing is active for that path, then optionally lets you
