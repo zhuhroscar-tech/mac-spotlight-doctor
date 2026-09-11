@@ -13,12 +13,19 @@ you what's holding it open, in plain language. It can also turn Spotlight
 indexing off for just that drive if you want to eject it faster — it never
 force-quits a process or touches indexing anywhere else.
 
+![mac-spotlight-doctor example output](docs/images/example-output.png)
+
 ```text
-$ mac-spotlight-doctor /Volumes/YourDrive
-Spotlight indexing: active on /Volumes/YourDrive
-Open handles: mds_stores (pid 61), mdworker_shared (pid 4021)
-Suggestion: run with --spotlight off to pause indexing on this volume, then
-retry eject.
+$ mac-spotlight-doctor /tmp
+target: /private/tmp
+device: None
+mount_point: None
+status: 5 handle(s) found
+- UserEvent (pid 566, user oscar, fd 305r)
+  -> DIR 42180492 /private/tmp
+  likely: Open file handle in directory or file
+...
+spotlight: unable to determine indexing state
 ```
 
 It is intentionally conservative: first shows who is holding the volume and
